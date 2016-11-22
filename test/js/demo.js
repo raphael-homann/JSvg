@@ -3,18 +3,22 @@
  */
 $(function () {
 
-    var demo = new JSVG();
+    demo = new JSVG();
 
     demo
         .setViewBox(0,0,500,500)
         //.setFramerate(20)
         .setTickrate(300);
-    var r1 = new Sprite(new JRect(0,0,20,5));
+    r1 = new Sprite(new JRect(0,0,20,5));
     var axe = new Sprite(new JRect(0,0,5,1));
     axe.moveTo(20,2);
     r1.addChild(axe);
-    var r2 = r1.clone();
     demo.root.addChild(r1);
+    var r2 = r1.clone();
+    demo.root.addChild(r2);
+    var r3 = r2.clone();
+    demo.root.addChild(r3);
+    r2.moveTo(200,0);
     //demo.root.addGraphic(new JRect(100,100,100,30));
 
     var keyboard=new JKeyboard();

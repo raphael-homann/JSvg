@@ -2,16 +2,23 @@
  * Created by raph on 17/11/16.
  */
 
-Sprite=function($node_origin) {
+Sprite=function($node_origin,nowrap) {
     if($node_origin instanceof JNode) $node_origin=$node_origin.$node;
     // wrap le noeud
     var self = this;
 
-    $node_origin.wrap(document.createElementNS('http://www.w3.org/2000/svg', 'g'));
+    if(!nowrap) {
+        $node_origin.wrap(document.createElementNS('http://www.w3.org/2000/svg', 'g'));
+        this.$node = $node_origin.parent();
+        this.$node_origin = $node_origin;
+        this.$node_origin.addClass("child-node");
+    } else {
+        this.$node = $node_origin;
+        this.$node_origin = $node_origin.find(">.child-node");
+
+    }
 
     this.root = null;
-    this.$node = $node_origin.parent();
-    this.$node_origin = $node_origin;
 
     this.children = [];
     this._position = {x:0,y:0,z:0};
@@ -38,7 +45,7 @@ Sprite=function($node_origin) {
 };
 
 Sprite.prototype.clone = function() {
-    var sprite = new Sprite(this.$node_origin.clone());
+    return new Sprite(this.$node.clone(),true);
 };
 /*
 gestion de l'affichage
@@ -64,13 +71,14 @@ Sprite.prototype.refresh = function() {
 Sprite.prototype.applyTransform = function() {
     if(this.needRefresh) {
         this.needRefresh = false;
-        var scale_transform = "scale(" + this._scale.x + ")";
+        var scale_transform = "scale(" + Math.round(this._scale.x,2) + ")";
 
-        var rotate_transform = "rotate(" + this._rotation.z + " " + this._pivotMove.x + "," + this._pivotMove.y + ")";
+        var rotate_transform = "rotate(" + Math.round(this._rotation.z,2) + " " + Math.round(this._pivotMove.x,2) + "," + Math.round(this._pivotMove.y,2) + ")";
         //this.$node.attr("transform", rotate_transform);
 
 
-        var translate_transform = "translate(" + (this._position.x - (this._pivotMove.x * this._scale.x)) + " " + (this._position.y - (this._pivotMove.y * this._scale.y)) + ")";
+        var translate_transform = "translate(" + Math.round(this._position.x - (this._pivotMove.x * this._scale.x),2)
+            + " " + Math.round(this._position.y - (this._pivotMove.y * this._scale.y),2) + ")";
         this.$node.attr("transform", translate_transform + " " + scale_transform+" "+rotate_transform);
     }
 };
