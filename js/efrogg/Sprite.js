@@ -70,15 +70,18 @@ Sprite.prototype.refresh = function() {
 
 Sprite.prototype.applyTransform = function() {
     if(this.needRefresh) {
+        var round2=function(num) {
+            return Math.round(num * 100) / 100;
+        };
         this.needRefresh = false;
-        var scale_transform = "scale(" + Math.round(this._scale.x,2) + ")";
+        var scale_transform = "scale(" + round2(this._scale.x) + ")";
 
-        var rotate_transform = "rotate(" + Math.round(this._rotation.z,2) + " " + Math.round(this._pivotMove.x,2) + "," + Math.round(this._pivotMove.y,2) + ")";
+        var rotate_transform = "rotate(" + round2(this._rotation.z) + " " + round2(this._pivotMove.x) + "," + round2(this._pivotMove.y) + ")";
         //this.$node.attr("transform", rotate_transform);
 
 
-        var translate_transform = "translate(" + Math.round(this._position.x - (this._pivotMove.x * this._scale.x),2)
-            + " " + Math.round(this._position.y - (this._pivotMove.y * this._scale.y),2) + ")";
+        var translate_transform = "translate(" + round2(this._position.x - (this._pivotMove.x * this._scale.x))
+            + " " + round2(this._position.y - (this._pivotMove.y * this._scale.y)) + ")";
         this.$node.attr("transform", translate_transform + " " + scale_transform+" "+rotate_transform);
     }
 };
