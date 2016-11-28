@@ -2,17 +2,19 @@ class JSVG {
     constructor(svg) {
         if (!svg) {
             this.$svg = new JNode("svg").$node;
-            this.root = new JSprite(new JNode("g").attr("root", 1));
-            this.root.setStage(this);
-            this.$svg.append(this.root.$node);
         } else {
             this.$svg = svg;
             //TODO : apprentissage /  découverte
         }
+        this.root = new JSprite(this.$svg,true);
+        this.root.setStage(this);
 
         this.need_refresh = false;
 
+        // full speed par défaut
         this.setFramerate();
+
+        // 100 ticks par seconde par défaut
         this.setTickrate(100);
     }
 
