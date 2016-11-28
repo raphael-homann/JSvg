@@ -210,7 +210,7 @@ var JSprite = function () {
 
         this.root = null;
 
-        this.children = [];
+        this._children = [];
         this._position = { x: 0, y: 0, z: 0 };
         this._rotation = { x: 0, y: 0, z: 0 };
         this._pivotMove = { x: 0, y: 0, z: 0 };
@@ -219,6 +219,7 @@ var JSprite = function () {
         this.shortRotation = true;
         this.rotationForceDirection = 0;
         this._tween_rotation = false;
+        this._tween_position = false;
 
         this.needRefresh = false;
     }
@@ -231,7 +232,7 @@ var JSprite = function () {
     }, {
         key: 'addChild',
         value: function addChild(child) {
-            this.children.push(child);
+            this._children.push(child);
             child.setStage(this.root);
             this.addGraphic(child);
             return this;
@@ -259,9 +260,9 @@ var JSprite = function () {
     }, {
         key: 'refresh',
         value: function refresh() {
-            //console.log("refresh",this.children.length);
+            //console.log("refresh",this._children.length);
             this.applyTransform();
-            this.children.every(function (child) {
+            this._children.every(function (child) {
                 child.refresh();
             });
         }
@@ -313,15 +314,18 @@ var JSprite = function () {
         value: function moveTo(x, y) {
             var relative = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
             var vitesse = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+            var ease = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : Quad.easeOut;
 
+            var next_x = x,
+                next_y = y;
 
             if (relative) {
-                this.x += x;
-                this.y += y;
-            } else {
-                this.x = x;
-                this.y = y;
+                next_x += this.x;
+                next_y += this.y;
             }
+
+            if (this._tween_position) this._tween_position.pause();
+            this._tween_position = TweenLite.to(this, vitesse, { x: next_x, y: next_y, ease: ease });
             return this;
         }
     }, {
@@ -339,11 +343,12 @@ var JSprite = function () {
         }
     }, {
         key: 'rotateTo',
-        value: function rotateTo(angle, vitesse, ease) {
-            vitesse = vitesse || 0;
-            ease = ease || Quad.easeOut;
+        value: function rotateTo(angle) {
+            var vitesse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+            var ease = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Quad.easeOut;
 
-            var next_rotation = angle;
+
+            var next_rotation = angle % 360;
 
             next_rotation %= 360;
 
@@ -383,7 +388,7 @@ var JSprite = function () {
         key: 'setStage',
         value: function setStage(stage) {
             this.root = stage;
-            this.children.every(function (child) {
+            this._children.every(function (child) {
                 child.setStage(stage);
             });
         }

@@ -16,7 +16,7 @@ class JSprite {
 
         this.root = null;
 
-        this.children = [];
+        this._children = [];
         this._position = {x: 0, y: 0, z: 0};
         this._rotation = {x: 0, y: 0, z: 0};
         this._pivotMove = {x: 0, y: 0, z: 0};
@@ -25,6 +25,7 @@ class JSprite {
         this.shortRotation = true;
         this.rotationForceDirection = 0;
         this._tween_rotation = false;
+        this._tween_position = false;
 
         this.needRefresh = false;
     }
@@ -35,7 +36,7 @@ class JSprite {
 
 
     addChild(child) {
-        this.children.push(child);
+        this._children.push(child);
         child.setStage(this.root);
         this.addGraphic(child);
         return this;
@@ -58,9 +59,9 @@ class JSprite {
     };
 
     refresh() {
-        //console.log("refresh",this.children.length);
+        //console.log("refresh",this._children.length);
         this.applyTransform();
-        this.children.every(function (child) {
+        this._children.every(function (child) {
             child.refresh();
         });
     };
@@ -150,16 +151,20 @@ class JSprite {
         this.moveTo(this.x + dx, this.y + dy,false,vitesse);
     };
 
-    moveTo(x, y, relative=false, vitesse=0) {
+    moveTo(x, y, relative=false, vitesse=0,ease=Quad.easeOut) {
+        var next_x = x,
+            next_y = y
+            ;
 
         if (relative) {
-            this.x += x;
-            this.y += y;
-        } else {
-            this.x = x;
-            this.y = y;
+            next_x += this.x;
+            next_y += this.y;
         }
+
+        if (this._tween_position) this._tween_position.pause();
+        this._tween_position = TweenLite.to(this, vitesse, {x: next_x,y:next_y, ease: ease});
         return this;
+
     };
 
     scaleTo(ratio) {
@@ -173,11 +178,9 @@ class JSprite {
         return this.rotateTo(angle + this.rotation, vitesse, ease)
     };
 
-    rotateTo(angle, vitesse, ease) {
-        vitesse = vitesse || 0;
-        ease = ease || Quad.easeOut;
+    rotateTo(angle, vitesse=0, ease=Quad.easeOut) {
 
-        var next_rotation = angle;
+        var next_rotation = angle%360;
 
         next_rotation %= 360;
 
@@ -216,7 +219,7 @@ class JSprite {
 
     setStage(stage) {
         this.root = stage;
-        this.children.every(function (child) {
+        this._children.every(function (child) {
             child.setStage(stage);
         })
     };
