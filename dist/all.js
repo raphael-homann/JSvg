@@ -279,8 +279,15 @@ var JSprite = function () {
                 //this.$node.attr("transform", rotate_transform);
 
 
-                var translate_transform = "translate(" + round2(this._position.x - this._pivotMove.x * this._scale.x) + " " + round2(this._position.y - this._pivotMove.y * this._scale.y) + ")";
-                this.$node.attr("transform", translate_transform + " " + scale_transform + " " + rotate_transform);
+                var x = round2(this._position.x - this._pivotMove.x * this._scale.x),
+                    y = round2(this._position.y - this._pivotMove.y * this._scale.y),
+                    translate_transform = "translate(" + x + " " + y + ")";
+                //console.log(this.$node,translate_transform + " " + scale_transform + " " + rotate_transform);
+                this.$node.attr({
+                    "transform": translate_transform + " " + scale_transform + " " + rotate_transform
+                    //"x":x,
+                    //"y":y
+                });
             }
         }
     }, {

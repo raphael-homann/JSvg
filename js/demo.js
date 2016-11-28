@@ -7,8 +7,8 @@ $(function () {
 
     demo
         .setViewBox(0,0,500,500)
-        //.setFramerate(20)
-        .setTickrate(10);
+        //.setFramerate(5)
+        .setTickrate(300);
     r1 = new JSprite(new JRect(0,0,20,5));
     var axe = new JSprite(new JRect(0,0,5,1));
     axe.moveTo(20,2);
@@ -33,6 +33,7 @@ $(function () {
         acceleration=0.2,
         friction=0.95,
         vrotation=0;
+
     demo.on("tick",function(e,data) {
         //console.log("tick",data);
         if(keyboard.isDown(keyboard.left)) {
@@ -55,7 +56,7 @@ $(function () {
         vrotation*=friction;
         axe.rotateTo(vrotation *10);
         r1.rotateOf(vrotation*vitesse/3);
-        r1.moveOf(0,vitesse,true);
+        r1.moveOf(0, vitesse, true);
     })
 
 });
