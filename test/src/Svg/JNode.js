@@ -1,0 +1,5 @@
+class JNode {
+    constructor(nodeName) {
+
+    }
+}
