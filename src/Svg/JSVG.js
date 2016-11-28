@@ -1,9 +1,11 @@
 class JSVG {
     constructor(svg) {
+        this._named_sprites=[];
         if (!svg) {
             this.$svg = new JNode("svg").$node;
         } else {
             this.$svg = svg;
+            this.discoverStructure();
             //TODO : apprentissage /  découverte
         }
         this.root = new JSprite(this.$svg,true);
@@ -81,6 +83,44 @@ class JSVG {
         this.root.addChild(child);
         return this;
     };
+
+    discoverStructure() {
+        var self = this;
+        this.$svg.find("[data-sprite-name]").each(function() {
+            self.discoverSprite($(this));
+        })
+    }
+
+    discoverSprite($node) {
+        var name =$node.data("sprite-name");
+        var sprite = new JSprite($node);
+        this._named_sprites[name]=sprite;
+
+        // repositionnement du centre
+        let x=$node.attr("x");
+        if(x) {
+            sprite.x=x;
+            $node.removeAttr("x")
+        }
+        let y=$node.attr("y");
+        if(y) {
+            sprite.y=y;
+            $node.removeAttr("y")
+        }
+
+        let pivotX=$node.data("pivot-x");
+        let pivotY=$node.data("pivot-y");
+        sprite.setPivot(pivotX,pivotY);
+    }
+
+    /**
+     *
+     * @param sprite_name
+     * @returns JSprite
+     */
+    getSpriteByName(sprite_name) {
+        return this._named_sprites[sprite_name];
+    }
 }
 
 

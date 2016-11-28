@@ -152,13 +152,13 @@ class JSprite {
     };
 
     moveTo(x, y, relative=false, vitesse=0,ease=Quad.easeOut) {
-        var next_x = x,
-            next_y = y
+        var next_x = x*1,
+            next_y = y*1
             ;
 
         if (relative) {
-            next_x += this.x;
-            next_y += this.y;
+            next_x += this.x*1;
+            next_y += this.y*1;
         }
 
         if (this._tween_position) this._tween_position.pause();
@@ -224,11 +224,9 @@ class JSprite {
         })
     };
 
-    setPivot(x, y, z, compensation) {
-        compensation = (typeof compensation === "undefined" ? true : compensation);
-        x = x || 0;
-        y = y || 0;
-        z = z || 0;
+    setPivot(x=0, y=0, z=0, compensation=true) {
+        // cast int
+        x*=1;y*=1;z*=1;
 
         if (compensation) {
             var dx = x - this._pivotMove.x,
@@ -238,7 +236,7 @@ class JSprite {
         }
 
         this._pivotMove = {x: x, y: y, z: z};
-
+        //console.log(this._pivotMove);
         this.askRefresh();                                          // refresh du pivot
         return this;
     };

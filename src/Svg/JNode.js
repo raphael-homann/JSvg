@@ -11,7 +11,6 @@ class JNode {
         };
     }
     attr(k, v) {
-        this.$node.attr(k, v);
-        return this;
+        return this.$node.attr(k, v);
     }
 }

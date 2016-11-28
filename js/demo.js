@@ -4,6 +4,7 @@
 $(function () {
 
     demo = new JSVG($("#demo1"));
+    demo.getSpriteByName("rect1").rotateOf(90,2);
 
     demo
         .setViewBox(0, 0, 500, 500)
