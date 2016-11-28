@@ -1,5 +1,0 @@
-class JSprite {
-    constructor(node) {
-
-    }
-}

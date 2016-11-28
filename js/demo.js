@@ -8,9 +8,9 @@ $(function () {
     demo
         .setViewBox(0,0,500,500)
         //.setFramerate(20)
-        .setTickrate(300);
-    r1 = new Sprite(new JRect(0,0,20,5));
-    var axe = new Sprite(new JRect(0,0,5,1));
+        .setTickrate(10);
+    r1 = new JSprite(new JRect(0,0,20,5));
+    var axe = new JSprite(new JRect(0,0,5,1));
     axe.moveTo(20,2);
     r1.addChild(axe);
     demo.root.addChild(r1);
@@ -24,8 +24,9 @@ $(function () {
     var keyboard=new JKeyboard();
     r1
         .setPivot(18,2.5)
-        //.moveTo(50,50)
-        .rotateTo(90,2);
+        .moveTo(50,50,false,2)
+        .rotateTo(90,2)
+    ;
     $(".svg-container").append(demo.getRoot());
 
     var vitesse= 0,
